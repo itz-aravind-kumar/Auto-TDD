@@ -102,28 +102,56 @@ class CodeGenerator:
                      feedback: str = None) -> str:
         """Build prompt for code generation."""
         if feedback:
-            # Refinement prompt with explicit function name
-            prompt = f"""Fix the Python code based on this test failure feedback:
+            # Enhanced refinement prompt with detailed feedback
+            prompt = f"""TASK: Fix the failing Python implementation based on detailed test failure analysis.
 
+{'=' * 80}
+TEST FAILURE ANALYSIS:
+{'=' * 80}
 {feedback}
 
-CRITICAL: The function name MUST be '{spec.function_name}'
-Function Description: {spec.description}
+{'=' * 80}
+SPECIFICATION:
+{'=' * 80}
+Function Name: {spec.function_name}
+Description: {spec.description}
 
 Parameters:
 """
             for param in spec.parameters:
-                prompt += f"  - {param.name}: {param.type_hint}\n"
+                prompt += f"  - {param.name}: {param.type_hint}"
+                if param.description:
+                    prompt += f" - {param.description}"
+                prompt += "\n"
             
             prompt += f"\nReturn Type: {spec.return_type}\n"
             
+            if spec.constraints:
+                prompt += "\nConstraints:\n"
+                for constraint in spec.constraints:
+                    prompt += f"  - {constraint}\n"
+            
             prompt += f"""
-Generate ONLY the corrected Python implementation code for the function '{spec.function_name}'.
-DO NOT generate any other function.
-Ensure all tests pass.
-Use proper type hints and follow PEP 8.
+{'=' * 80}
+CRITICAL REQUIREMENTS:
+{'=' * 80}
+1. Function name MUST be EXACTLY '{spec.function_name}' (case-sensitive)
+2. Fix ALL issues identified in the failure analysis above
+3. Handle ALL edge cases mentioned in the failing tests
+4. Ensure proper input validation (raise ValueError/TypeError when appropriate)
+5. Test your logic mentally with the failing test cases before generating
+6. Use proper type hints matching the specification
+7. Include docstring explaining the logic
+8. Follow PEP 8 style guidelines
 
-Generate the complete function implementation:"""
+{'=' * 80}
+RESPONSE FORMAT:
+{'=' * 80}
+Generate ONLY the complete, corrected Python code.
+Do NOT include explanations, test code, or examples.
+Start directly with imports (if needed) or the function/class definition.
+
+Generate the complete corrected implementation now:"""
         else:
             # Initial generation prompt
             prompt = f"""Generate a Python function with the following specification:
@@ -249,11 +277,13 @@ Generate ONLY the Python function '{spec.function_name}':"""
             if end != -1:
                 code = code[start:end].strip()
         
-        # Remove any explanatory text before the function
+        # Remove any explanatory text before the function/class
         lines = code.split('\n')
         func_start = -1
         for i, line in enumerate(lines):
-            if line.strip().startswith('def '):
+            stripped = line.strip()
+            # Look for function or class definitions at module level (no indentation)
+            if (stripped.startswith('def ') or stripped.startswith('class ')) and line[0] not in (' ', '\t'):
                 func_start = i
                 break
         

@@ -128,11 +128,29 @@ class PromptParser:
             if match:
                 return match.group(1)
         
+        # Special handling for data structure problems (LRU cache, Trie, etc.)
+        # Check for specific data structures first (case-insensitive)
+        if re.search(r'LRU|Least Recently Used.*cache', prompt, re.IGNORECASE):
+            return "LRUCache"
+        elif re.search(r'trie|prefix\s+tree', prompt, re.IGNORECASE):
+            return "Trie"
+        elif re.search(r'(?:min|max)\s+heap', prompt, re.IGNORECASE):
+            heap_type = re.search(r'(min|max)\s+heap', prompt, re.IGNORECASE).group(1)
+            return f"{heap_type.capitalize()}Heap"
+        elif re.search(r'binary\s+search\s+tree|BST', prompt, re.IGNORECASE):
+            return "BinarySearchTree"
+        elif re.search(r'linked\s+list', prompt, re.IGNORECASE):
+            return "LinkedList"
+        
         # Extract from first line or generate generic name
         first_line = prompt.split('\n')[0].lower()
-        words = re.findall(r'\b[a-z]+\b', first_line)
+        # Skip common verbs like "design", "implement", "write", "create"
+        skip_words = {'design', 'implement', 'write', 'create', 'develop', 'build', 'make', 'a', 'an', 'the', 'and', 'for', 'that'}
+        words = [w for w in re.findall(r'\b[a-z]+\b', first_line) if w not in skip_words]
         if len(words) >= 2:
             return '_'.join(words[:3])
+        elif len(words) == 1:
+            return words[0]
         
         return "solution"
     
