@@ -1,4 +1,4 @@
-# Auto-TDD: AI-Powered Test-Driven Development
+# TestPilot - Auto Think..Test..Refactor..Repeat
 
 <div align="center">
 
@@ -38,16 +38,26 @@ Writing production-ready code takes time:
 
 ## 🌟 Key Features
 
+### 🎯 **Novel Multi-Dimensional RL System** ⭐ NEW!
+- **6 independent reward dimensions**: Test passing, partial correctness, quality, efficiency, improvement, convergence
+- **Partial credit for near-misses**: "Expected 100, got 95" earns reward
+- **Code quality analysis**: Complexity scoring, Pythonic pattern detection
+- **Efficiency tracking**: Execution time + Big-O complexity estimation
+- **Full transparency**: See exactly why iteration 3 beats iteration 2
+- **Visual progress bars**: Watch each dimension improve in real-time
+
 ### 🤖 **Hybrid AI Architecture**
 - **OpenAI GPT-4o-mini**: Fast, accurate test generation ($0.0007/run)
 - **Google Gemini 2.5-flash**: Lightning-fast code generation (FREE!)
 - **Smart Model Selection**: Right tool for each job
 
-### 🔄 **Reinforcement Learning**
-- Iteratively improves code quality
-- Learns from test failures
-- Reward-based optimization
-- Convergence detection
+### 🔄 **Enhanced Reinforcement Learning**
+- **Multi-dimensional rewards**: 6 independent scoring dimensions
+- **Partial correctness**: Rewards near-miss solutions
+- **Code quality analysis**: Complexity, patterns, maintainability
+- **Efficiency tracking**: Execution time + Big-O estimation
+- **Iterative improvement**: Learns from test failures
+- **Smart convergence**: Detects optimal solutions
 
 ### 🐳 **Docker Sandbox Security**
 - Isolated test execution
@@ -66,9 +76,11 @@ Writing production-ready code takes time:
 
 ### 📊 **Real-Time Monitoring**
 - Live Docker container logs
-- Iteration tracking
-- Quality metrics
-- Performance analytics
+- **Iteration tracking with reward breakdown**
+- **Multi-dimensional reward visualization**
+- **Progress bars for each dimension**
+- Quality metrics and code patterns
+- Performance analytics (time + complexity)
 - Chain-of-thought reasoning
 
 ### ⚡ **Blazing Fast**
@@ -157,8 +169,34 @@ Then open **http://localhost:7860** in your browser!
 - 📊 **Real-Time Logs**: Watch AI work
 - 🐳 **Docker Sandbox Tab**: See container lifecycle
 - 🧠 **Chain of Thought**: Understand AI reasoning
-- 📈 **Iteration Tracking**: Monitor improvements
+- 📈 **Enhanced Iteration Tab**: Multi-dimensional reward breakdown
+  - **Quick Summary Table**: All 6 dimensions at a glance
+  - **Progress Bars**: Visual representation of each reward component
+  - **Detailed Breakdown**: See complexity scores, patterns, execution time
+  - **Iteration Comparison**: Understand why iteration 3 beats iteration 2
 - 💾 **Download Results**: Get code + tests
+
+### Enhanced Iteration Tab 📊
+
+The **"📈 Iterations"** tab now shows complete reward breakdown:
+
+```markdown
+# Quick Summary
+| Iter | Tests | Pass Rate | Test | Partial | Quality | Efficiency | Total |
+|------|-------|-----------|------|---------|---------|------------|-------|
+| 1    | 28/38 | 73.7%     | 36.8 | 0.0     | 4.3     | 7.2        | 55.7  |
+| 2    | 38/38 | 100.0%    | 50.0 | 0.0     | 4.6     | 7.2        | 69.4  |
+
+# Detailed Breakdown for Iteration 2
+🎯 Test Passing:        ████████████████████ 50.0/50  (38/38 tests)
+📊 Partial Correctness: ░░░░░░░░░░░░░░░░░░░░ 0.0/15
+✨ Code Quality:        █████████░░░░░░░░░░░ 4.6/10   (complexity: 1.00)
+⚡ Efficiency:          ██████████████░░░░░░ 7.2/10   (1.19s, O(n))
+📈 Improvement:         █████░░░░░░░░░░░░░░░ 2.6/10   (+26.3%)
+🏆 Convergence:         ████████████████████ 5.0/5
+```
+
+**See exactly where rewards come from** - no more guessing!
 
 ### Method 2: Command Line
 
@@ -313,18 +351,66 @@ Quality Score: 95/100
                           └─────────────────────┘
 ```
 
-### Reinforcement Learning Rewards
+### Enhanced Multi-Dimensional Reinforcement Learning
+
+Auto-TDD uses a **sophisticated 6-dimension reward system** that goes beyond simple pass/fail:
 
 ```python
-Reward = (tests_passed × 10)        # Base reward
-       + (improvement × 20)          # Progress bonus
-       + (quality_score × 5)         # Code quality
-       + (efficiency_bonus × 3)      # Performance
-       - (complexity_penalty × 3)    # Simplicity preference
-       - (regression_penalty × 8)    # Don't break working tests
+Total Reward (0-100 points) = 
+    Test Passing (50%)           # Primary signal: How many tests pass
+  + Partial Correctness (15%)    # Near-miss bonus: "Expected 100, got 95" 
+  + Code Quality (10%)           # Pythonic patterns, low complexity
+  + Efficiency (10%)             # Execution speed + Big-O complexity
+  + Improvement (10%)            # Delta from previous iteration  
+  + Convergence (5%)             # Bonus for all tests passing
+  - Penalties                    # Timeouts, errors, syntax issues
 ```
 
-**Why RL?** Code improves with each iteration based on test feedback!
+#### 🎯 Reward Dimensions Explained
+
+| Dimension | Weight | What It Measures | Example |
+|-----------|--------|------------------|---------|
+| **Test Passing** | 50% | Core signal: test pass rate | 18/22 tests = 40.9/50 pts |
+| **Partial Correctness** | 15% | String similarity for near-misses | "Expected 100, got 95" = 14.3/15 pts |
+| **Code Quality** | 10% | Complexity, patterns, documentation | Low complexity + docstring = 6.2/10 pts |
+| **Efficiency** | 10% | Execution time + algorithmic complexity | 0.5s + O(log n) = 8.0/10 pts |
+| **Improvement** | 10% | Progress from previous iteration | 75% → 82% pass rate = 0.7/10 pts |
+| **Convergence** | 5% | Completion bonus for perfect score | All tests pass = 5.0/5 pts |
+
+**Why This Matters:**
+- ✅ **Better Solutions**: Can distinguish between two 95% solutions and pick the faster one
+- ✅ **Faster Convergence**: Partial credit guides toward solution even when tests fail
+- ✅ **Quality Code**: Rewards maintainable, efficient implementations
+- ✅ **Full Transparency**: See exactly why iteration 3 beats iteration 2
+
+#### 📊 Example: LRU Cache Problem
+
+With the old system (simple pass/fail), iterations with same pass rate looked identical:
+```
+Iteration 2: 21/22 tests = 210 points
+Iteration 3: 21/22 tests = 210 points  ❌ Can't tell which is better!
+```
+
+With enhanced RL, we see the full picture:
+```
+Iteration 2: 21/22 tests (95.5%)
+├─ Test Passing: 47.5/50
+├─ Partial Correctness: 8.1/15 (failure similarity: 0.54)
+├─ Code Quality: 5.2/10
+├─ Efficiency: 6.2/10 (0.8s, O(n))
+└─ Total: 65.1/100
+
+Iteration 3: 21/22 tests (95.5%)  ⭐ BEST
+├─ Test Passing: 47.5/50
+├─ Partial Correctness: 13.2/15 (failure similarity: 0.88)
+├─ Code Quality: 6.1/10
+├─ Efficiency: 8.5/10 (0.3s, O(1))
+└─ Total: 72.8/100  ✅ Clear winner!
+```
+
+**Insight**: Iteration 3 is better because the failure is closer to correct (0.88 vs 0.54 similarity) and code runs faster (0.3s vs 0.8s) with better complexity (O(1) vs O(n))!
+
+**Why RL?** Code improves with each iteration based on multi-dimensional feedback, not just pass/fail!
 
 ---
 
@@ -391,11 +477,15 @@ Generate reference implementations to compare against manual code.
 - Network disabled (no data exfiltration)
 - Read-only filesystem (immutable execution)
 
-### 3. Reinforcement Learning Integration
-- Not just "generate and hope"
-- Learns from failures
-- Iterative improvement
+### 3. Novel Multi-Dimensional RL System
+- **Industry-first 6-dimension reward function**
+- Not just "generate and hope" - learns from failures
+- **Partial correctness**: Rewards "almost correct" solutions
+- **Code quality metrics**: Complexity, patterns, documentation
+- **Efficiency scoring**: Time + Big-O complexity estimation
+- Iterative improvement with full transparency
 - Always returns BEST solution (not last)
+- **Complete visualization**: See exactly why solutions improve
 
 ### 4. Comprehensive Testing
 - 90%+ edge case coverage
@@ -421,7 +511,9 @@ Auto TTD/
 │   ├── code_generator.py      # Gemini-powered code generation
 │   ├── sandbox_runner.py      # Docker execution environment
 │   ├── failure_analyzer.py    # Error classification & feedback
-│   ├── refine_loop.py         # RL-based refinement
+│   ├── refine_loop.py         # RL-based refinement orchestrator
+│   ├── enhanced_rewards.py    # Multi-dimensional reward system
+│   ├── reward_visualization.py # Reward breakdown display utilities
 │   ├── quality_checks.py      # Linting, typing, security
 │   └── cli.py                 # Command-line interface
 │
@@ -442,7 +534,10 @@ Auto TTD/
 │   ├── README.md              # This file
 │   ├── QUICKSTART.md          # 5-minute guide
 │   ├── ARCHITECTURE.md        # Technical details
-│   └── LLM_DRIVEN_ARCHITECTURE.md
+│   ├── LLM_DRIVEN_ARCHITECTURE.md
+│   ├── ENHANCED_RL_SUMMARY.md # Multi-dimensional RL system
+│   ├── GRADIO_REWARD_DISPLAY.md # UI reward visualization
+│   └── IMPLEMENTATION_CHECKLIST.md # Complete feature list
 │
 ├── 🧪 Examples
 │   ├── factorial.txt
@@ -465,6 +560,9 @@ Auto TTD/
 - **[Architecture Overview](ARCHITECTURE.md)** - Technical deep-dive
 - **[LLM Strategy](LLM_DRIVEN_ARCHITECTURE.md)** - AI design decisions
 - **[Docker Sandbox Demo](DOCKER_SANDBOX_DEMO.md)** - Security details
+- **[Enhanced RL System](ENHANCED_RL_SUMMARY.md)** - Multi-dimensional rewards explained
+- **[Gradio Reward Display](GRADIO_REWARD_DISPLAY.md)** - UI visualization guide
+- **[Implementation Checklist](IMPLEMENTATION_CHECKLIST.md)** - Complete feature list
 
 ---
 

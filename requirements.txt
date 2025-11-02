@@ -18,6 +18,16 @@ pylint>=3.0.0
 bandit>=1.7.5
 radon>=6.0.0
 
+# Enhanced RL System
+python-Levenshtein>=0.21.0
+
+# Web UI
+gradio>=4.0.0
+
+# LLM Providers
+openai>=1.0.0
+google-generativeai>=0.3.0
+
 # Utilities
 python-dotenv>=1.0.0
 colorama>=0.4.6
